@@ -2,6 +2,8 @@
 let Usuario = require("../modelo/usuario");
 // Variable para importar la libreria encriptar pass
 let bcrypt = require("bcrypt-nodejs");
+// Importamos jwt
+let jwt = require("../libs/jwt");
 
 // Funcion para registrar el usuario
 const registrarUsuario = (req, res) => {
@@ -52,7 +54,10 @@ const login = (req, res) => {
         bcrypt.compare(params.pass, datosUsuario.pass, function (err, confirm) {
           if (confirm) {
             if (params.getToken) {
-              res.status(200).send({ Usuario: datosUsuario });
+              res.status(200).send({
+                jwt: jwt.createToken(datosUsuario),
+                //Usuario: datosUsuario,
+              });
             } else {
               res
                 .status(200)
