@@ -1,15 +1,16 @@
-// Variables de modulos
+// Variables de modulos (importamos librerias)
 let express = require("express");
 let bodyParser = require("body-parser");
 let mongoose = require("mongoose");
 // Variable para puerto de conexion del servidor
 let port = process.env.PORT || 3001;
 
-// variable de la aplicacion
+// variable de la aplicacion que ejecuta el server
 let app = express();
 
 // Routes
 let Usuario = require("./routes/usuario");
+let Categoria = require("./routes/categoria");
 
 // Conexion a DB
 mongoose.connect(
@@ -17,7 +18,6 @@ mongoose.connect(
   { useUnifiedTopology: true, useNewUrlParser: true },
   (err, res) => {
     if (err) {
-      console.log(err);
       throw err;
     } else {
       console.log("Servidor DB: ON");
@@ -28,11 +28,12 @@ mongoose.connect(
   }
 );
 
-// Analizar las url
+// Analizar la codificacion de las url
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // Usar las rutas (API)
 app.use("/api", Usuario);
+app.use("/api", Categoria);
 
 // Creamos modulo para importar
 module.exports = app;

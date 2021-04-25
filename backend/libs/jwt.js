@@ -5,7 +5,8 @@ let moment = require("moment");
 // Clave secreta
 let secret = "bit21store";
 
-exports.createToken = function (usuario) {
+// Exportamos el token generado enviando los datos del usuario
+exports.createToken =  (usuario) => {
   let payload = {
     _id: usuario._id,
     nombres: usuario.nombres,
@@ -13,7 +14,8 @@ exports.createToken = function (usuario) {
     edad: usuario.edad,
     correo: usuario.correo,
     iat: moment().unix(),
-    //exp: moment.add(30, "days").unix(),
+    //exp: moment.add(10, "days").unix(),
   };
+  // se retorna el token codificado
   return jwt.encode(payload, secret);
 };

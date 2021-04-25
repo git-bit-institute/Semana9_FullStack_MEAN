@@ -1,5 +1,5 @@
 // Variable donde se importa el modulo usuario
-let Usuario = require("../modelo/usuario");
+let Usuario = require("../models/usuario");
 // Variable para importar la libreria encriptar pass
 let bcrypt = require("bcrypt-nodejs");
 // Importamos jwt
@@ -12,9 +12,16 @@ const registrarUsuario = (req, res) => {
   // utilizamos el modelo usuario
   let usuario = new Usuario();
   // Si llego el password procedemos hacer el hash (encriptar)
-  if (params.pass) {
+  if (
+    params.nombres &&
+    params.apellidos &&
+    params.edad &&
+    params.correo &&
+    params.pass &&
+    params.rol
+  ) {
     // Usamos el bcrypt para encriptar la contraseña
-    bcrypt.hash(params.pass, null, null, function (err, hash) {
+    bcrypt.hash(params.pass, null, null, (err, hash) => {
       // si se encripta registramos el usuario
       if (hash) {
         usuario.nombres = params.nombres;
@@ -37,7 +44,7 @@ const registrarUsuario = (req, res) => {
     });
   } else {
     // Damos respuesta con codigo HTTP de error y enviamos el error a consola
-    res.status(405).send({ err: "No se guardo un dato" });
+    res.status(405).send({ err: "Faltaron campos por llenar" });
   }
 };
 
@@ -51,7 +58,7 @@ const login = (req, res) => {
       res.status(500).send({ mensaje: "Error del servidor" });
     } else {
       if (datosUsuario) {
-        bcrypt.compare(params.pass, datosUsuario.pass, function (err, confirm) {
+        bcrypt.compare(params.pass, datosUsuario.pass, (err, confirm) => {
           if (confirm) {
             if (params.getToken) {
               res.status(200).send({
